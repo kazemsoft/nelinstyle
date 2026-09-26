@@ -3,7 +3,11 @@
 name: nelin-stage
 services:
   app:
-    build: ..
+    build:
+      context: ..
+      # omid-server's CPU cannot run sharp; see next.config.ts.
+      args:
+        NEXT_IMAGE_UNOPTIMIZED: "1"
     image: nelin:stage
     container_name: nelin-stage
     restart: unless-stopped

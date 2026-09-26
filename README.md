@@ -26,7 +26,7 @@ Put TLS/reverse proxy (Caddy, nginx, Traefik) in front for public hosting.
 
 ## Stage (omid-server)
 
-Every push to `main` runs `.github/workflows/deploy-stage.yml` on a self-hosted runner on omid-server (`~/nelin-runner`, label `nelin-stage`, started by an `@reboot` crontab entry). It builds the Docker image and restarts container `nelin-stage` from `deploy/compose.stage.yml`. The container joins Nginx Proxy Manager's `npm_default` network. NPM proxy host: `www.nelinstyle.com` → `http://nelin-stage:3000`. No host ports are published.
+Every push to `main` runs `.github/workflows/deploy-stage.yml` on a self-hosted runner on omid-server (`~/nelin-runner`, label `nelin-stage`, started by an `@reboot` crontab entry). It builds the Docker image and restarts container `nelin-stage` from `deploy/compose.stage.yml`. The container joins Nginx Proxy Manager's `npm_default` network. NPM proxy host: `www.nelinstyle.com` → `http://nelin-stage:3000`. No host ports are published. Stage builds with `NEXT_IMAGE_UNOPTIMIZED=1` because omid-server's CPU (no SSE4.2) crashes `sharp`, so stage serves the original full-size images.
 
 ## Vercel
 

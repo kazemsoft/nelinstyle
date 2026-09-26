@@ -8,6 +8,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM base AS build
+ARG NEXT_IMAGE_UNOPTIMIZED
 ENV NEXT_TELEMETRY_DISABLED=1 NEXT_OUTPUT=standalone
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
