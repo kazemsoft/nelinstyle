@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 # Production image using Next.js standalone output. Vercel ignores this file.
 FROM node:24-alpine AS base
 RUN apk add --no-cache libc6-compat
