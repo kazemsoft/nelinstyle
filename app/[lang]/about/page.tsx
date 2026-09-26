@@ -1,0 +1,14 @@
+import {notFound} from 'next/navigation';
+import {Globe,Check,ArrowUpLeft,ArrowUpRight} from 'lucide-react';
+import {aboutContent} from '../../about-content';
+type Lang='fa'|'en'|'ar';
+export function generateStaticParams(){return ['fa','en','ar'].map(lang=>({lang}));}
+export async function generateMetadata({params}:{params:Promise<{lang:string}>}){
+ const {lang}=await params;const content=aboutContent[lang as Lang];
+ return {metadataBase:new URL('https://nelinstyle.com'),title:`${content?.title||'About'} | Nelin`,description:content?.paragraphs[0],alternates:{canonical:`/${lang}/about`,languages:{fa:'/fa/about',en:'/en/about',ar:'/ar/about'}},icons:{icon:'/icon.svg'}};
+}
+export default async function AboutPage({params}:{params:Promise<{lang:string}>}){
+ const {lang:locale}=await params;if(!['fa','en','ar'].includes(locale))notFound();const lang=locale as Lang;const content=aboutContent[lang];
+ const labels={fa:{back:'بازگشت به مجموعه',language:'انتخاب زبان',footer:'یک روسری. هزار روایت.'},en:{back:'Back to the collection',language:'Choose language',footer:'One scarf. A thousand stories.'},ar:{back:'العودة إلى المجموعة',language:'اختيار اللغة',footer:'وشاح واحد. ألف حكاية.'}}[lang];const Arrow=lang==='en'?ArrowUpRight:ArrowUpLeft;
+ return <><div className="announcement">NELIN STYLE <span>—</span> {labels.footer}</div><header><a className="wordmark" href={`/${lang}`} aria-label="Nelin home"><img src="/images/79.png" alt="Nelin Style"/></a><a className="about-back" href={`/${lang}#collection`}>{labels.back}<Arrow size={19}/></a><div className="language-picker"><button className="language-trigger" popoverTarget="language-menu" aria-label={labels.language}><Globe size={23}/></button><div id="language-menu" popover="auto" className="language-menu"><p>{labels.language}</p>{([{code:'fa',name:'فارسی',flag:'ir'},{code:'en',name:'English',flag:'gb'},{code:'ar',name:'العربية',flag:'sa'}] as const).map(l=><a key={l.code} href={`/${l.code}/about`} lang={l.code} hrefLang={l.code} aria-current={lang===l.code?'page':undefined}><img src={`/flags/${l.flag}.png`} alt="" width={30} height={20}/><span>{l.name}</span>{lang===l.code&&<Check size={16}/>}</a>)}</div></div></header><main className="about-page"><section className="world about-section"><div className="world-text"><span className="eyebrow">NELIN / ABOUT US</span><h1>{content.title}</h1><img className="brand-seal" src="/images/79.png" alt="Nelin Style"/><a className="text-link" href={`/${lang}#collection`}>{labels.back}<Arrow size={20}/></a></div><div className="about-copy">{content.paragraphs.map((paragraph,index)=><p key={index}>{paragraph}</p>)}</div></section></main><footer><div className="footer-bottom"><span>© {new Date().getFullYear()} NELIN</span><a href={`/${lang}`}>NELINSTYLE.COM</a></div></footer></>;
+}
