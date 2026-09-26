@@ -24,6 +24,10 @@ docker run --rm -p 8080:8080 -e PORT=8080 nelin
 
 Put TLS/reverse proxy (Caddy, nginx, Traefik) in front for public hosting.
 
+## Stage (omid-server)
+
+Every push to `main` runs `.github/workflows/deploy-stage.yml` on a self-hosted runner on omid-server (`~/nelin-runner`, label `nelin-stage`, started by an `@reboot` crontab entry). It builds the Docker image and restarts container `nelin-stage` from `deploy/compose.stage.yml`. The container joins Nginx Proxy Manager's `npm_default` network. NPM proxy host: `www.nelinstyle.com` → `http://nelin-stage:3000`. No host ports are published.
+
 ## Vercel
 
 Vercel ignores the Dockerfile. Import the repo, Next.js preset, `npm run build`, no env vars. Add `nelinstyle.com` via Vercel Domains when ready. Nothing has been deployed.

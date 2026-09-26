@@ -1,0 +1,15 @@
+# Stage on omid-server. Nginx Proxy Manager reaches the app as nelin-stage:3000
+# over its external npm_default network; no host ports are published.
+name: nelin-stage
+services:
+  app:
+    build: ..
+    image: nelin:stage
+    container_name: nelin-stage
+    restart: unless-stopped
+    networks: [nelin, npm]
+networks:
+  nelin: {}
+  npm:
+    external: true
+    name: npm_default
