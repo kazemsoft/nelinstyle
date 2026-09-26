@@ -4,21 +4,29 @@ A Next.js App Router storefront concept for nelinstyle.com. Persian `/fa`, Engli
 
 ## Run
 
-Node.js 20.9+ is required.
+Node.js 20.9+ is required (Docker image uses Node 24 LTS). Install from the lockfile:
 
 ```sh
 npm ci
-npm run dev
+npm run dev          # http://127.0.0.1:3000
+npm run build && npm start
 ```
 
-## Production / Vercel
+## Docker (home server / any container host)
+
+`Dockerfile` is a multi-stage build using Next.js standalone output (enabled only when `NEXT_OUTPUT=standalone`, which the Dockerfile sets). It runs as non-root user `nextjs`, listens on `0.0.0.0`, and honours `PORT` (default 3000). No build secrets or env vars are needed; `.dockerignore` keeps `.env*`, `node_modules`, `.next` and `.git` out of the context.
 
 ```sh
-npm run build
-npm start
+docker build -t nelin .
+docker run --rm -p 3000:3000 nelin
+docker run --rm -p 8080:8080 -e PORT=8080 nelin
 ```
 
-Import this folder into a Git repository and connect it to Vercel. Select the Next.js preset; no environment variables are required. Add `nelinstyle.com` through Vercel Domains when ready. No deployment or domain changes have been made by this delivery.
+Put TLS/reverse proxy (Caddy, nginx, Traefik) in front for public hosting.
+
+## Vercel
+
+Vercel ignores the Dockerfile. Import the repo, Next.js preset, `npm run build`, no env vars. Add `nelinstyle.com` via Vercel Domains when ready. Nothing has been deployed.
 
 ## Current scope
 
@@ -54,3 +62,9 @@ References checked 2026-09-26:
 - https://vercel.com/docs/limits/fair-use-guidelines
 
 For Vercel import, choose the directory containing `package.json` as the root, use the Next.js preset and the standard build command `npm run build`. Let Next.js/Vercel manage the output directory; do not set it to `out`. Current code needs no environment variables. Configure credentials separately if a backend is added later.
+
+## Known limitations
+
+- Product/hero images are full-size PNGs served as plain `<img>` (~18 MB for the home grid). Consider `next/image` or pre-resized WebP before launch.
+- Pinch zoom in the 3D scene is verified with synthetic touch events in headless Chrome only, not on a physical phone.
+- Quote form is a preview: nothing is sent or stored.
