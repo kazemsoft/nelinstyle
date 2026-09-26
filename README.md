@@ -63,8 +63,11 @@ References checked 2026-09-26:
 
 For Vercel import, choose the directory containing `package.json` as the root, use the Next.js preset and the standard build command `npm run build`. Let Next.js/Vercel manage the output directory; do not set it to `out`. Current code needs no environment variables. Configure credentials separately if a backend is added later.
 
+## Images
+
+Product, hero, gallery and 3D-texture images go through `next/image` (resized WebP via `sharp`, included in the Docker image). Originals in `public/images` stay untouched. Logo and flags are small and served as-is.
+
 ## Known limitations
 
-- Product/hero images are full-size PNGs served as plain `<img>` (~18 MB for the home grid). Consider `next/image` or pre-resized WebP before launch.
 - Pinch zoom in the 3D scene is verified with synthetic touch events in headless Chrome only, not on a physical phone.
 - Quote form is a preview: nothing is sent or stored.
