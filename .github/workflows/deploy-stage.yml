@@ -16,7 +16,7 @@ jobs:
       name: stage
       url: https://www.nelinstyle.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build and restart container
         run: docker compose -f deploy/compose.stage.yml up -d --build --remove-orphans
       - name: Health check
